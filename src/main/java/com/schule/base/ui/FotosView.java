@@ -18,7 +18,7 @@ public class FotosView extends VerticalLayout {
     public FotosView() {
 
         setSizeFull();
-        getStyle().set("background-color", "#ffffffff");
+        getStyle().set("background-color", "#222");
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
@@ -53,42 +53,44 @@ public class FotosView extends VerticalLayout {
         fotoBox.setWidthFull();
         fotoBox.setHeight("200px");
         fotoBox.getStyle().set("background-color", "#e0e0e0");
-        Span fotoLabel = new Span("Foto Bild");
+
+        Span fotoLabel = new Span("Foto: Anna im Garten");
+        fotoBox.add(fotoLabel);
+
         Button prevFoto = new Button(VaadinIcon.ANGLE_LEFT.create());
         Button nextFoto = new Button(VaadinIcon.ANGLE_RIGHT.create());
         HorizontalLayout fotoNav = new HorizontalLayout(prevFoto, nextFoto);
         fotoNav.setJustifyContentMode(JustifyContentMode.BETWEEN);
         fotoNav.setWidthFull();
 
-        Span beschriftung = new Span("Anna aufm Bild");
         Button addFoto = new Button("+");
         Button removeFoto = new Button("-");
 
-        HorizontalLayout fotoActions = new HorizontalLayout(beschriftung, addFoto, removeFoto);
+        HorizontalLayout fotoActions = new HorizontalLayout(addFoto, removeFoto);
         fotoActions.setWidthFull();
         fotoActions.setJustifyContentMode(JustifyContentMode.BETWEEN);
-
-        fotoBox.add(fotoLabel);
 
         VerticalLayout musikBox = new VerticalLayout();
         musikBox.setWidthFull();
         musikBox.setHeight("200px");
         musikBox.getStyle().set("background-color", "#e0e0e0");
-        Span musikIcon = new Span("♪");
+
+        Span musikTitel = new Span("Lied: Lieblingslied von Hans");
+        musikBox.add(musikTitel);
+
         Button prevSong = new Button(VaadinIcon.ANGLE_LEFT.create());
         Button nextSong = new Button(VaadinIcon.ANGLE_RIGHT.create());
         HorizontalLayout songNav = new HorizontalLayout(prevSong, nextSong);
         songNav.setWidthFull();
         songNav.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        Button play = new Button("Play");
+
+        Button play = new Button("Lied abspielen", VaadinIcon.PLAY.create());
         Button addSong = new Button("+");
         Button removeSong = new Button("-");
 
-        HorizontalLayout musikBottom = new HorizontalLayout(play, removeSong, addSong);
-        musikBottom.setWidthFull();
-        musikBottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
-
-        musikBox.add(musikIcon, songNav, play);
+        HorizontalLayout musikActions = new HorizontalLayout(play, addSong, removeSong);
+        musikActions.setWidthFull();
+        musikActions.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
         content.add(
                 topBar,
@@ -98,7 +100,7 @@ public class FotosView extends VerticalLayout {
                 fotoActions,
                 musikBox,
                 songNav,
-                musikBottom
+                musikActions
         );
 
         phone.add(content);

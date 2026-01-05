@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -47,16 +48,22 @@ public class NeueErinnerungView extends VerticalLayout {
         topBar.setWidthFull();
         topBar.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
-        H1 title = new H1("Neue Erinnerungen");
+        H1 title = new H1("Neue Erinnerung");
+
+        Span errorLabel = new Span();
+        errorLabel.getStyle()
+                .set("color", "red")
+                .set("font-weight", "bold");
+        errorLabel.setVisible(false);
 
         TextField titel = new TextField("Titel");
         titel.setPlaceholder("z.B. Arzttermin");
-
+        titel.setRequiredIndicatorVisible(true);
         TextArea beschreibung = new TextArea("Beschreibung (optional)");
 
         TextField zeit = new TextField("Uhrzeit");
         zeit.setPlaceholder("z.B. 08:30");
-
+        zeit.setRequiredIndicatorVisible(true);
         DatePicker datum = new DatePicker("Datum");
 
         Select<String> zugriff = new Select<>();
@@ -66,10 +73,10 @@ public class NeueErinnerungView extends VerticalLayout {
 
         Select<String> kategorie = new Select<>();
         kategorie.setLabel("Kategorie");
-        kategorie.setItems("Essen", "Aktivität", "Medikamente", "Besuch");
-        kategorie.setPlaceholder("Bitte wählen");
+        kategorie.setItems("Essen", "Aktivitaet", "Medikamente", "Besuch");
+        kategorie.setPlaceholder("Bitte waehlen");
 
-        Span besetzt = new Span("Besetzt");
+        Span besetzt = new Span("Besetzt (Zeit ist bereits belegt)");
         besetzt.getStyle().set("background-color", "#ff4444")
                 .set("color", "white")
                 .set("padding", "8px 16px")
@@ -77,15 +84,40 @@ public class NeueErinnerungView extends VerticalLayout {
 
         Button back = new Button(VaadinIcon.BACKWARDS.create(),
                 e -> UI.getCurrent().navigate(MainView.class));
-        Button save = new Button(VaadinIcon.DOWNLOAD.create(),
-                e -> UI.getCurrent().navigate(MainView.class));
+
+        Button save = new Button(VaadinIcon.DOWNLOAD.create(), e -> {
+            String t = titel.getValue() == null ? "" : titel.getValue().trim();
+            String z = zeit.getValue() == null ? "" : zeit.getValue().trim();
+
+            if (t.isEmpty() || z.isEmpty()) {
+                errorLabel.setText("Bitte Titel und Uhrzeit ausfuellen.");
+                errorLabel.setVisible(true);
+                Notification.show("Eingaben unvollstaendig.");
+                return;
+            }
+
+            errorLabel.setVisible(false);
+            Notification.show("Erinnerung wurde (testweise) gespeichert.");
+            UI.getCurrent().navigate(MainView.class);
+        });
 
         HorizontalLayout bottom = new HorizontalLayout(back, save);
         bottom.setWidthFull();
         bottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-        content.add(topBar, title, titel, beschreibung, zeit, datum,
-                    zugriff, kategorie, besetzt, bottom);
+        content.add(
+                topBar,
+                title,
+                errorLabel,
+                titel,
+                beschreibung,
+                zeit,
+                datum,
+                zugriff,
+                kategorie,
+                besetzt,
+                bottom
+        );
 
         phone.add(content);
         add(phone);

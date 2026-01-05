@@ -17,7 +17,7 @@ public class MainView extends VerticalLayout {
 
     public MainView() {
         setSizeFull();
-        getStyle().set("background-color", "#ffffffff"); 
+        getStyle().set("background-color", "#ffffffff");
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
@@ -62,7 +62,7 @@ public class MainView extends VerticalLayout {
         list.setSpacing(true);
 
         list.add(createReminderRow("08:30 UHR", "Spaziergang"));
-        list.add(createReminderRow("09:30 UHR", "Frühstück"));
+        list.add(createReminderRow("09:30 UHR", "Fruehstueck"));
         list.add(createReminderRow("11:30 UHR", "Medikamente"));
         list.add(createReminderRow("14:30 UHR", "Tochter zu Besuch"));
         list.add(createReminderRow("18:30 UHR", "Abendessen"));
@@ -70,7 +70,7 @@ public class MainView extends VerticalLayout {
         Button addButton = new Button(VaadinIcon.PLUS.create(),
                 e -> UI.getCurrent().navigate(NeueErinnerungView.class));
         Button deleteButton = new Button(VaadinIcon.MINUS.create());
-        Button fotosButton = new Button("Fotos",
+        Button fotosButton = new Button("Fotos und Lieder",
                 e -> UI.getCurrent().navigate(FotosView.class));
 
         addButton.getStyle().set("border-radius", "999px");
@@ -85,12 +85,12 @@ public class MainView extends VerticalLayout {
         bottomBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         bottomBar.setAlignItems(Alignment.END);
 
-        VerticalLayout left = new VerticalLayout(addButton, new Span("Erinnerung hinzufügen"));
+        VerticalLayout left = new VerticalLayout(addButton, new Span("Erinnerung hinzufuegen"));
         left.setAlignItems(Alignment.CENTER);
         left.setPadding(false);
         left.setSpacing(false);
 
-        VerticalLayout right = new VerticalLayout(deleteButton, new Span("Erinnerung löschen"));
+        VerticalLayout right = new VerticalLayout(deleteButton, new Span("Erinnerung loeschen"));
         right.setAlignItems(Alignment.CENTER);
         right.setPadding(false);
         right.setSpacing(false);
@@ -98,7 +98,6 @@ public class MainView extends VerticalLayout {
         bottomBar.add(left, fotosButton, right);
         content.add(topBar, title, dateBar, list, bottomBar);
         phone.add(content);
-
         add(phone);
     }
 
