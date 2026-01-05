@@ -2,6 +2,7 @@ package com.schule.base.ui;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -16,6 +17,9 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.timepicker.TimePicker;
+import java.time.LocalTime;
+
 
 @Route("neu")
 public class NeueErinnerungView extends VerticalLayout {
@@ -61,6 +65,12 @@ public class NeueErinnerungView extends VerticalLayout {
         titel.setRequiredIndicatorVisible(true);
         TextArea beschreibung = new TextArea("Beschreibung (optional)");
 
+        TimePicker zeit = new TimePicker("Uhrzeit");
+        zeit.setStep(java.time.Duration.ofMinutes(15)); 
+        zeit.setMin(LocalTime.of(0, 0));
+        zeit.setMax(LocalTime.of(23, 45));
+
+
         TextField zeit = new TextField("Uhrzeit");
         zeit.setPlaceholder("z.B. 08:30");
         zeit.setRequiredIndicatorVisible(true);
@@ -75,6 +85,24 @@ public class NeueErinnerungView extends VerticalLayout {
         kategorie.setLabel("Kategorie");
         kategorie.setItems("Essen", "Aktivitaet", "Medikamente", "Besuch");
         kategorie.setPlaceholder("Bitte waehlen");
+
+        Button busy = new Button("Termin ist Belegt");
+        busy.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        busy.getElement().setProperty("title", "Dieser Zeitslot ist bereits belegt");
+        busy.setVisible(false); 
+
+        zeit.addValueChangeListener(event -> {
+        LocalTime value = event.getValue();
+
+        if (value == null) {
+                busy.setVisible(false);
+                return;
+        }
+        // frei von 08:00 bis 15:00 (inklusive 15:00)
+        boolean isFree = !value.isBefore(LocalTime.of(8, 0)) && !value.isAfter(LocalTime.of(15, 0));
+
+        busy.setVisible(!isFree);
+        });
 
         Span besetzt = new Span("Besetzt (Zeit ist bereits belegt)");
         besetzt.getStyle().set("background-color", "#ff4444")
@@ -105,6 +133,8 @@ public class NeueErinnerungView extends VerticalLayout {
         bottom.setWidthFull();
         bottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
+        content.add(topBar, title, titel, beschreibung, zeit, datum,
+                    zugriff, kategorie, busy, bottom);
         content.add(
                 topBar,
                 title,

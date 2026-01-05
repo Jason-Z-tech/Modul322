@@ -81,19 +81,32 @@ public class MainView extends VerticalLayout {
                 .set("border-radius", "12px");
 
         HorizontalLayout bottomBar = new HorizontalLayout();
+        bottomBar.getStyle().set("margin-top", "200px");
         bottomBar.setWidthFull();
         bottomBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         bottomBar.setAlignItems(Alignment.END);
 
-        VerticalLayout left = new VerticalLayout(addButton, new Span("Erinnerung hinzufuegen"));
+        Span addText = new Span("Erinnerung hinzufügen");
+        addText.getStyle()
+                .set("font-size", "14px")
+                .set("text-align", "center");
+
+        VerticalLayout left = new VerticalLayout(addButton, addText);
         left.setAlignItems(Alignment.CENTER);
         left.setPadding(false);
         left.setSpacing(false);
+        left.setWidth("150px"); 
 
-        VerticalLayout right = new VerticalLayout(deleteButton, new Span("Erinnerung loeschen"));
+        Span deleteText = new Span("Erinnerung löschen");
+        deleteText.getStyle()
+                .set("font-size", "14px")
+                .set("text-align", "center");
+
+        VerticalLayout right = new VerticalLayout(deleteButton, deleteText);
         right.setAlignItems(Alignment.CENTER);
         right.setPadding(false);
         right.setSpacing(false);
+        right.setWidth("150px");
 
         bottomBar.add(left, fotosButton, right);
         content.add(topBar, title, dateBar, list, bottomBar);
@@ -102,10 +115,6 @@ public class MainView extends VerticalLayout {
     }
 
     private HorizontalLayout createReminderRow(String time, String text) {
-        Button symbol = new Button(VaadinIcon.STAR.create());
-        symbol.getStyle()
-                .set("background-color", "#00FF00")
-                .set("border-radius", "999px");
 
         Span timeLabel = new Span(time);
         Span textLabel = new Span(text);
@@ -114,7 +123,7 @@ public class MainView extends VerticalLayout {
         right.setPadding(false);
         right.setSpacing(false);
 
-        HorizontalLayout row = new HorizontalLayout(symbol, right);
+        HorizontalLayout row = new HorizontalLayout( right);
         row.setWidthFull();
         row.getStyle().set("background-color", "#5146B8");
         row.setAlignItems(Alignment.CENTER);
