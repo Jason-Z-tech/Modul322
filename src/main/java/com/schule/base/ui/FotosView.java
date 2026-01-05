@@ -18,7 +18,7 @@ public class FotosView extends VerticalLayout {
     public FotosView() {
 
         setSizeFull();
-        getStyle().set("background-color", "#222");
+        getStyle().set("background-color", "#ffffffff");
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
@@ -39,8 +39,6 @@ public class FotosView extends VerticalLayout {
 
         Icon moonIcon = VaadinIcon.MOON_O.create();
         Icon profileIcon = VaadinIcon.USER.create();
-        Button back = new Button(VaadinIcon.BACKWARDS.create(),
-                e -> UI.getCurrent().navigate(MainView.class));
 
         HorizontalLayout topBar = new HorizontalLayout(moonIcon, new Span(""), profileIcon);
         topBar.setWidthFull();
@@ -49,6 +47,7 @@ public class FotosView extends VerticalLayout {
 
         H1 title = new H1("Fotos und Lieder");
 
+        // FOTO BOX (zentriert)
         VerticalLayout fotoBox = new VerticalLayout();
         fotoBox.setWidthFull();
         fotoBox.setHeight("200px");
@@ -58,20 +57,26 @@ public class FotosView extends VerticalLayout {
         fotoBox.setSpacing(false);
 
         Span fotoLabel = new Span("Foto Bild");
+        fotoBox.add(fotoLabel);
+
+        // FOTO NAV (Pfeile unterhalb)
         Button prevFoto = new Button(VaadinIcon.ANGLE_LEFT.create());
         Button nextFoto = new Button(VaadinIcon.ANGLE_RIGHT.create());
 
         HorizontalLayout fotoNav = new HorizontalLayout(prevFoto, nextFoto);
-        fotoNav.setJustifyContentMode(JustifyContentMode.BETWEEN);
         fotoNav.setWidthFull();
+        fotoNav.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
+        // FOTO TEXT + ACTIONS
+        Span beschriftung = new Span("Anna aufm Bild");
         Button addFoto = new Button("+");
         Button removeFoto = new Button("-");
 
-        HorizontalLayout fotoActions = new HorizontalLayout(addFoto, removeFoto);
+        HorizontalLayout fotoActions = new HorizontalLayout(beschriftung, addFoto, removeFoto);
         fotoActions.setWidthFull();
         fotoActions.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
+        // MUSIK BOX (zentriert: Icon + Play)
         VerticalLayout musikBox = new VerticalLayout();
         musikBox.setWidthFull();
         musikBox.setHeight("200px");
@@ -83,29 +88,34 @@ public class FotosView extends VerticalLayout {
         Span musikIcon = new Span("♪");
         musikIcon.getStyle().set("font-size", "28px");
 
+        Button play = new Button("Play");
+
+        musikBox.add(musikIcon, play);
+
+        // SONG NAV (Pfeile unterhalb)
         Button prevSong = new Button(VaadinIcon.ANGLE_LEFT.create());
         Button nextSong = new Button(VaadinIcon.ANGLE_RIGHT.create());
 
-        Button play = new Button("Play");
-
-        HorizontalLayout songNav = new HorizontalLayout(prevSong, play, nextSong);
+        HorizontalLayout songNav = new HorizontalLayout(prevSong, nextSong);
         songNav.setWidthFull();
         songNav.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-
+        // SONG TEXT + ACTIONS
+        Span beschriftung2 = new Span("Lied: Modern Talking");
         Button addSong = new Button("+");
         Button removeSong = new Button("-");
-        Span beschriftung2 = new Span("Lied: Modern Talking");
 
         HorizontalLayout musikBottom = new HorizontalLayout(beschriftung2, addSong, removeSong);
         musikBottom.setWidthFull();
         musikBottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
+        // BACK
+        Button back = new Button(VaadinIcon.BACKWARDS.create(),
+                e -> UI.getCurrent().navigate(MainView.class));
+
         HorizontalLayout bottom = new HorizontalLayout(back);
         bottom.setWidthFull();
         bottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
-
-        musikBox.add(musikIcon, songNav);
 
         content.add(
                 topBar,
@@ -117,7 +127,6 @@ public class FotosView extends VerticalLayout {
                 songNav,
                 musikBottom,
                 bottom
-                
         );
 
         phone.add(content);

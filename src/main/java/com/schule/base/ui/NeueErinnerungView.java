@@ -9,17 +9,16 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.timepicker.TimePicker;
-import java.time.LocalTime;
+import com.vaadin.flow.router.Route;
 
+import java.time.LocalTime;
 
 @Route("neu")
 public class NeueErinnerungView extends VerticalLayout {
@@ -54,26 +53,18 @@ public class NeueErinnerungView extends VerticalLayout {
 
         H1 title = new H1("Neue Erinnerung");
 
-        Span errorLabel = new Span();
-        errorLabel.getStyle()
-                .set("color", "red")
-                .set("font-weight", "bold");
-        errorLabel.setVisible(false);
-
         TextField titel = new TextField("Titel");
         titel.setPlaceholder("z.B. Arzttermin");
         titel.setRequiredIndicatorVisible(true);
+
         TextArea beschreibung = new TextArea("Beschreibung (optional)");
 
         TimePicker zeit = new TimePicker("Uhrzeit");
-        zeit.setStep(java.time.Duration.ofMinutes(15)); 
+        zeit.setStep(java.time.Duration.ofMinutes(15));
         zeit.setMin(LocalTime.of(0, 0));
         zeit.setMax(LocalTime.of(23, 45));
-
-
-        TextField zeit = new TextField("Uhrzeit");
-        zeit.setPlaceholder("z.B. 08:30");
         zeit.setRequiredIndicatorVisible(true);
+
         DatePicker datum = new DatePicker("Datum");
 
         Select<String> zugriff = new Select<>();
@@ -86,66 +77,44 @@ public class NeueErinnerungView extends VerticalLayout {
         kategorie.setItems("Essen", "Aktivitaet", "Medikamente", "Besuch");
         kategorie.setPlaceholder("Bitte waehlen");
 
-        Button busy = new Button("Termin ist Belegt");
+        Button busy = new Button("Termin ist belegt");
         busy.addThemeVariants(ButtonVariant.LUMO_ERROR);
         busy.getElement().setProperty("title", "Dieser Zeitslot ist bereits belegt");
-        busy.setVisible(false); 
+        busy.setVisible(false);
 
+        // 08:00–15:00 frei, danach besetzt; vor Eingabe unsichtbar
         zeit.addValueChangeListener(event -> {
-        LocalTime value = event.getValue();
+            LocalTime value = event.getValue();
 
-        if (value == null) {
+            if (value == null) {
                 busy.setVisible(false);
                 return;
-        }
-        // frei von 08:00 bis 15:00 (inklusive 15:00)
-        boolean isFree = !value.isBefore(LocalTime.of(8, 0)) && !value.isAfter(LocalTime.of(15, 0));
+            }
 
-        busy.setVisible(!isFree);
+            boolean isFree = !value.isBefore(LocalTime.of(8, 0)) && !value.isAfter(LocalTime.of(15, 0));
+            busy.setVisible(!isFree);
         });
-
-        Span besetzt = new Span("Besetzt (Zeit ist bereits belegt)");
-        besetzt.getStyle().set("background-color", "#ff4444")
-                .set("color", "white")
-                .set("padding", "8px 16px")
-                .set("border-radius", "8px");
 
         Button back = new Button(VaadinIcon.BACKWARDS.create(),
                 e -> UI.getCurrent().navigate(MainView.class));
 
-        Button save = new Button(VaadinIcon.DOWNLOAD.create(), e -> {
-            String t = titel.getValue() == null ? "" : titel.getValue().trim();
-            String z = zeit.getValue() == null ? "" : zeit.getValue().trim();
-
-            if (t.isEmpty() || z.isEmpty()) {
-                errorLabel.setText("Bitte Titel und Uhrzeit ausfuellen.");
-                errorLabel.setVisible(true);
-                Notification.show("Eingaben unvollstaendig.");
-                return;
-            }
-
-            errorLabel.setVisible(false);
-            Notification.show("Erinnerung wurde (testweise) gespeichert.");
-            UI.getCurrent().navigate(MainView.class);
-        });
+        Button save = new Button(VaadinIcon.DOWNLOAD.create(),
+                e -> UI.getCurrent().navigate(MainView.class));
 
         HorizontalLayout bottom = new HorizontalLayout(back, save);
         bottom.setWidthFull();
         bottom.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-        content.add(topBar, title, titel, beschreibung, zeit, datum,
-                    zugriff, kategorie, busy, bottom);
         content.add(
                 topBar,
                 title,
-                errorLabel,
                 titel,
                 beschreibung,
                 zeit,
                 datum,
                 zugriff,
                 kategorie,
-                besetzt,
+                busy,
                 bottom
         );
 
